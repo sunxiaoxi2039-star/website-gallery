@@ -1,0 +1,147 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Website Gallery — 网站画廊</title>
+<style>
+  :root { --ink: #000; --paper: #fff; --mute: rgba(0,0,0,.45); --line: rgba(0,0,0,.14); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+  .serif { font-family: 'Times New Roman', 'Songti SC', 'SimSun', serif; }
+
+  .masthead { padding: 32px; display: flex; justify-content: space-between; align-items: baseline; }
+  .brand { font-size: 18px; letter-spacing: .05em; }
+  .count { font-size: 12px; color: var(--mute); letter-spacing: .12em; text-transform: uppercase; }
+
+  .hero { padding: 14vh 32px 10vh; max-width: 1200px; }
+  .hero h1 { font-size: clamp(40px, 7vw, 96px); font-weight: 400; line-height: 1.02; letter-spacing: -0.02em; }
+  .hero p { margin-top: 28px; font-size: 15px; line-height: 1.9; color: var(--mute); max-width: 520px; }
+
+  .index-head { padding: 0 32px 20px; display: grid; grid-template-columns: 64px 1fr 220px; gap: 24px;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute);
+    border-bottom: 1px solid var(--line); }
+  @media (max-width: 720px) { .index-head { grid-template-columns: 40px 1fr; } .index-head .col-link { display: none; } }
+
+  .exhibit { display: grid; grid-template-columns: 64px 1fr 220px; gap: 24px; padding: 40px 32px;
+    border-bottom: 1px solid var(--line); align-items: start; text-decoration: none; color: inherit; }
+  @media (max-width: 720px) { .exhibit { grid-template-columns: 40px 1fr; } }
+
+  .num { font-size: 13px; color: var(--mute); padding-top: 6px; font-variant-numeric: tabular-nums; }
+
+  .ex-body { display: grid; grid-template-columns: 168px 1fr; gap: 32px; align-items: start; }
+  @media (max-width: 720px) { .ex-body { grid-template-columns: 1fr; } }
+
+  .cover { width: 168px; height: 210px; overflow: hidden; position: relative;
+    background: linear-gradient(135deg,#0b0b12 0%,#1d1033 28%,#0f3b4d 52%,#3d1030 76%,#0b0b12 100%); }
+  .cover::after { content:""; position:absolute; inset:0;
+    background: radial-gradient(120% 90% at 30% 20%, rgba(0,255,255,.35), transparent 55%),
+                radial-gradient(100% 80% at 75% 80%, rgba(255,0,200,.3), transparent 55%); }
+  .cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+    transition: transform .6s cubic-bezier(.2,.6,.2,1); }
+  .exhibit:hover .cover img { transform: scale(1.05); }
+
+  .ex-title { font-size: clamp(26px, 3vw, 40px); font-weight: 400; line-height: 1.15; letter-spacing: -0.01em; }
+  .ex-sub { margin-top: 8px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+  .ex-desc { margin-top: 18px; font-size: 14px; line-height: 1.85; color: rgba(0,0,0,.72); max-width: 560px; }
+
+  .links { display: flex; flex-direction: column; gap: 10px; }
+  @media (max-width: 720px) { .links { grid-column: 2; flex-direction: row; flex-wrap: wrap; } }
+  .gate { display: inline-block; font-size: 13px; letter-spacing: .04em; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--line); padding: 11px 18px; transition: background .2s, border-color .2s; }
+  .gate:hover { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.4); }
+  .gate .tag { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); margin-right: 8px; }
+  .gate.off { color: var(--mute); pointer-events: none; border-style: dashed; }
+
+  footer { padding: 64px 32px 40px; font-size: 12px; color: var(--mute); letter-spacing: .02em;
+    display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand serif">Website Gallery</div>
+  <div class="count" id="count"></div>
+</header>
+
+<section class="hero">
+  <h1 class="serif">网站画廊</h1>
+  <p>这里收藏我做过的每一个网站。每个展览开两扇门：国际入口由 GitHub Pages 托管，中国入口由 Kimi 托管——同一件作品，走离你最近的那扇门。</p>
+</section>
+
+<div class="index-head">
+  <span>编号</span><span>展览</span><span class="col-link">入口</span>
+</div>
+
+<main id="list"></main>
+
+<footer>
+  <span>© <span id="year"></span> Website Gallery</span>
+  <span>GitHub Pages × Kimi</span>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   展览清单 —— 以后每新增一个网站，只用在下面数组里加一段：
+   {
+     title: "展览名",
+     sub:   "英文或副标题",
+     desc:  "一句话介绍",
+     cover: "封面图地址（可留空，留空则用渐变封面）",
+     intl:  "GitHub Pages 地址（国际入口）",
+     china: "Kimi 发布地址（中国入口，发布后把 ok.kimi.link 填进来）"
+   }
+   ══════════════════════════════════════════════════════════════ */
+const EXHIBITIONS = [
+  {
+    title: "全息画廊",
+    sub:   "Holo Gallery — 3D Vortex Exhibition",
+    desc:  "一座不设实体墙的 3D 数字美术馆：600 个悬浮画面组成缓缓旋转的 WebGL 圆柱漩涡，滚动驱动流转，点击任意作品打开全屏详情。馆藏 24 件全息风格数字艺术，分属肖像、雕塑、花卉、建筑、星际、流体六个系列。",
+    cover: "https://sunxiaoxi2039-star.github.io/holo-gallery/images/portrait_01.jpg",
+    intl:  "https://sunxiaoxi2039-star.github.io/holo-gallery/",
+    china: ""   // ← Kimi 发布后，把 https://xxx.ok.kimi.link 填在这里
+  },
+  // 下一个网站：复制上面一段，改内容即可
+];
+
+const list = document.getElementById("list");
+document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("count").textContent =
+  String(EXHIBITIONS.length).padStart(2, "0") + " 个展览";
+
+EXHIBITIONS.forEach((ex, i) => {
+  const a = document.createElement("a");
+  a.className = "exhibit";
+  a.href = ex.intl || "#";
+  a.target = "_blank";
+  a.rel = "noreferrer";
+  a.innerHTML = `
+    <span class="num">${String(i + 1).padStart(2, "0")}</span>
+    <div class="ex-body">
+      <div class="cover">${ex.cover ? `<img src="${ex.cover}" alt="${ex.title}"
+        onerror="this.remove()">` : ""}</div>
+      <div>
+        <h2 class="ex-title serif">${ex.title}</h2>
+        <div class="ex-sub">${ex.sub}</div>
+        <p class="ex-desc">${ex.desc}</p>
+      </div>
+    </div>
+    <div class="links">
+      ${ex.intl ? `<span class="gate"><span class="tag">国际</span>GitHub Pages ↗</span>` : ""}
+      ${ex.china
+        ? `<span class="gate" data-china="${ex.china}"><span class="tag">中国</span>Kimi ↗</span>`
+        : `<span class="gate off"><span class="tag">中国</span>待发布</span>`}
+    </div>`;
+  // 中国入口单独跳转，避免触发整卡的国际链接
+  const chinaGate = a.querySelector("[data-china]");
+  if (chinaGate) chinaGate.addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation();
+    window.open(chinaGate.dataset.china, "_blank", "noreferrer");
+  });
+  list.appendChild(a);
+});
+</script>
+</body>
+</html>

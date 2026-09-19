@@ -68,7 +68,7 @@
 
 <section class="hero">
   <h1 class="serif">网站画廊</h1>
-  <p>这里收藏我做过的每一个网站。每个展览开两扇门：国际入口由 GitHub Pages 托管，中国入口由 Kimi 托管——同一件作品，走离你最近的那扇门。</p>
+  <p>这里收藏我做过的网站与交互实验。点击作品，进入对应的网站；如有中国访问入口，也会一并列出。</p>
 </section>
 
 <div class="index-head">
@@ -127,6 +127,15 @@ const EXHIBITIONS = [
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/habitat/",
     china: ""
   },
+  {
+    title: "四季小屋",
+    sub: "Moonlit Forge — One cottage. Six moments.",
+    desc: "一座可以旋转探索的 3D 小屋。昼夜交替，四季轮转，炉火始终亮着。",
+    cover: "covers/moonlit-forge.png",
+    intl: "https://xiaoxi-moonlit-forge.sun-xiaoxi.chatgpt.site/",
+    intlLabel: "打开网站",
+    china: ""
+  },
   // 下一个网站：复制上面一段，改内容即可
 ];
 
@@ -153,7 +162,7 @@ EXHIBITIONS.forEach((ex, i) => {
       </div>
     </div>
     <div class="links">
-      ${ex.intl ? `<span class="gate"><span class="tag">国际</span>GitHub Pages ↗</span>` : ""}
+      ${ex.intl ? `<span class="gate"><span class="tag">国际</span>${ex.intlLabel || "GitHub Pages"} ↗</span>` : ""}
       ${ex.china
         ? `<span class="gate" data-china="${ex.china}"><span class="tag">中国</span>Kimi ↗</span>`
         : `<span class="gate off"><span class="tag">中国</span>待发布</span>`}

@@ -127,6 +127,23 @@ const EXHIBITIONS = [
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/habitat/",
     china: ""
   },
+  {
+    title: "SELENE · 月面漫游",
+    sub: "SELENE — Lunar Surface Explorer",
+    desc: "六轮探测车在三维月面缓慢行驶，留下连续车辙。自由观察车轮、悬挂与仪器，探索陨石坑、岩石和星空；支持环绕、车载及自由漫游视角。",
+    cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/selene/cover.png",
+    intl: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/selene/",
+    china: ""
+  },
+  {
+    title: "四季小屋",
+    sub: "Moonlit Forge — One Cottage, Six Moments",
+    desc: "可旋转的三维微缩小屋，在夜晚、白天、春、夏、秋、冬六种状态间切换。观察炉火、窗光、花叶和积雪，暂停动画或拖动探索细节。",
+    cover: "covers/moonlit-forge.png",
+    intl: "https://xiaoxi-moonlit-forge.sun-xiaoxi.chatgpt.site/",
+    label: "打开网站",
+    china: ""
+  },
   // 下一个网站：复制上面一段，改内容即可
 ];
 
@@ -135,7 +152,11 @@ document.getElementById("year").textContent = new Date().getFullYear();
 document.getElementById("count").textContent =
   String(EXHIBITIONS.length).padStart(2, "0") + " 个展览";
 
-EXHIBITIONS.forEach((ex, i) => {
+const localPreview = ["127.0.0.1", "localhost"].includes(location.hostname);
+const resolveEntry = url => localPreview && url?.startsWith("https://sunxiaoxi2039-star.github.io/website-showcase-sites/")
+  ? url.replace("https://sunxiaoxi2039-star.github.io/website-showcase-sites/", "../website-showcase-sites/") : url;
+EXHIBITIONS.forEach((entry, i) => {
+  const ex = {...entry, intl: resolveEntry(entry.intl), cover: resolveEntry(entry.cover)};
   const a = document.createElement("a");
   a.className = "exhibit";
   a.href = ex.intl || "#";
@@ -153,7 +174,7 @@ EXHIBITIONS.forEach((ex, i) => {
       </div>
     </div>
     <div class="links">
-      ${ex.intl ? `<span class="gate"><span class="tag">国际</span>GitHub Pages ↗</span>` : ""}
+      ${ex.intl ? `<span class="gate"><span class="tag">${ex.label ? "SITES" : (localPreview && ex.intl.startsWith("../") ? "本地" : "国际")}</span>${ex.label || (localPreview && ex.intl.startsWith("../") ? "打开作品" : "GitHub Pages")} ↗</span>` : ""}
       ${ex.china
         ? `<span class="gate" data-china="${ex.china}"><span class="tag">中国</span>Kimi ↗</span>`
         : `<span class="gate off"><span class="tag">中国</span>待发布</span>`}

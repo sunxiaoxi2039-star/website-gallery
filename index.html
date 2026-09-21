@@ -132,9 +132,11 @@ const EXHIBITIONS = [
     title: "Kimimotion",
     sub:   "Motionsites 1:1 临摹展厅",
     desc:  "对 motionsites.ai 热门卡片的逐像素复刻：免费卡用官方 Prompt 逐字直译，付费卡按录屏逐帧逆向工程。收录 Legion VPN（白金/深蓝双主题罗马战士）、Velorah、Sky Estate、Avant Studio、Art Landing 五页，四页带 AI 生成循环运镜视频背景，移动端已适配。",
-    cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/kimimotion/cover.jpg",
-    intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/kimimotion/",
-    china: "https://kimimotion.ok.kimi.link"
+    cover: "covers/kimimotion.png",
+    intl: "https://kimimotion.ok.kimi.link/",
+    label: "打开网站",
+    platform: "KIMI",
+    china: ""
   },
   {
     title: "栖居 Habitat · 松间一隅",
@@ -205,8 +207,8 @@ EXHIBITIONS.forEach((entry, i) => {
       </div>
     </div>
     <div class="links">
-      ${ex.intl ? `<a class="gate" href="${ex.intl}" target="_blank" rel="noreferrer"><span class="tag">${ex.label ? "SITES" : (localPreview && ex.intl.startsWith("../") ? "本地" : "国际")}</span>${ex.label || (localPreview && ex.intl.startsWith("../") ? "打开作品" : "GitHub Pages")} ↗</a>` : ""}
-      ${ex.china ? `<a class="gate" href="${ex.china}" target="_blank" rel="noreferrer"><span class="tag">中国</span>Kimi ↗</a>` : `<span class="gate off"><span class="tag">中国</span>待发布</span>`}
+      ${ex.intl ? `<a class="gate" href="${ex.intl}" target="_blank" rel="noreferrer"><span class="tag">${ex.label ? (ex.platform || "SITES") : (localPreview && ex.intl.startsWith("../") ? "本地" : "国际")}</span>${ex.label || (localPreview && ex.intl.startsWith("../") ? "打开作品" : "GitHub Pages")} ↗</a>` : ""}
+      ${ex.china ? `<a class="gate" href="${ex.china}" target="_blank" rel="noreferrer"><span class="tag">中国</span>Kimi ↗</a>` : (ex.platform === "KIMI" ? "" : `<span class="gate off"><span class="tag">中国</span>待发布</span>`)}
     </div>`;
   const copyButton = article.querySelector('.copy-prompt');
   if (copyButton) copyButton.addEventListener('click', async () => {

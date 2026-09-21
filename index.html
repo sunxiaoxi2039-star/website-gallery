@@ -55,31 +55,25 @@
   .gate .tag { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); margin-right: 8px; }
   .gate.off { color: var(--mute); pointer-events: none; border-style: dashed; }
 
-  /* 每件作品下面挂它的生成 prompt */
-  .exhibit-row { border-bottom: 1px solid var(--line); }
-  .exhibit-row .exhibit { border-bottom: 0; }
-  .exhibit-row:has(.pwrap) .exhibit { padding-bottom: 20px; }
-  .pwrap { padding: 0 32px 34px; max-width: 1060px; }
-  .pwrap details { border: 1px solid var(--line); }
-  .pwrap summary { cursor: pointer; list-style: none; padding: 12px 18px;
-    font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute);
-    display: flex; align-items: center; gap: 10px; }
-  .pwrap summary::-webkit-details-marker { display: none; }
-  .pwrap summary::before { content: "＋"; font-size: 13px; }
-  .pwrap details[open] summary::before { content: "－"; }
-  .pwrap details[open] summary { border-bottom: 1px solid var(--line); }
-  .pwrap .pbody { position: relative; padding: 16px 18px; }
-  .pwrap pre { margin: 0; white-space: pre-wrap; word-break: break-word;
-    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-    font-size: 12.5px; line-height: 1.9; color: rgba(0,0,0,.74); }
-  .pwrap .copy { position: absolute; top: -34px; right: 14px; padding: 4px 12px;
-    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-    font: inherit; font-size: 11px; cursor: pointer; transition: background .2s, color .2s; }
-  .pwrap .copy:hover { background: var(--ink); color: var(--paper); }
-  @media (max-width: 720px) { .pwrap { padding: 0 20px 26px; } }
-
   footer { padding: 64px 32px 40px; font-size: 12px; color: var(--mute); letter-spacing: .02em;
     display: flex; justify-content: space-between; }
+
+  .ex-body > div { min-width: 0; }
+  .ex-title a { color: inherit; text-decoration: none; }
+  .ex-title a:hover { text-decoration: underline; text-underline-offset: 5px; }
+  .case-badge { display: inline-block; margin-bottom: 13px; padding: 5px 8px; border: 1px solid #bdc8bd; color: #435d43; font-size: 10px; letter-spacing: .07em; }
+  .prompt-box { margin-top: 24px; max-width: 660px; border: 1px solid var(--line); background: #f7f7f4; }
+  .prompt-box summary { padding: 14px 16px; font-size: 12px; cursor: pointer; letter-spacing: .03em; }
+  .prompt-content { padding: 0 16px 16px; }
+  .prompt-text { max-height: 360px; overflow-y: auto; padding-right: 6px; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.9 system-ui, sans-serif; color: #303330; user-select: text; }
+  .prompt-note { margin-top: 12px; font-size: 11px; line-height: 1.7; color: var(--mute); }
+  .prompt-actions { margin-top: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .copy-prompt { padding: 8px 13px; font: 12px system-ui,sans-serif; border: 1px solid #b9bdb4; background: #fff; cursor: pointer; }
+  .copy-prompt:hover { background: #eaede5; }
+  .prompt-source { color: #435d43; font-size: 12px; text-underline-offset: 3px; }
+  .copy-status { font-size: 11px; color: #435d43; }
+  :focus-visible { outline: 2px solid #435d43; outline-offset: 4px; }
+  @media (max-width: 720px) { .exhibit { padding: 28px 20px; gap: 12px; } .cover { width: 100%; height: 180px; } .prompt-content { padding: 0 12px 12px; } .prompt-box summary { padding: 12px; } }
 </style>
 </head>
 <body>
@@ -91,7 +85,7 @@
 
 <section class="hero">
   <h1 class="serif">网站画廊</h1>
-  <p>这里收藏我做过的每一个网站。每个展览开两扇门：国际入口由 GitHub Pages 托管，中国入口由 Kimi 托管——同一件作品，走离你最近的那扇门。</p>
+  <p>收藏可以亲自体验的网站，也留下制作它们的起点。三个新案例附制作 Prompt，可在首页直接阅读、复制，再打开成品对照探索。</p>
 </section>
 
 <div class="index-head">
@@ -138,13 +132,49 @@ const EXHIBITIONS = [
     title: "Kimimotion",
     sub:   "Motionsites 1:1 临摹展厅",
     desc:  "对 motionsites.ai 热门卡片的逐像素复刻：免费卡用官方 Prompt 逐字直译，付费卡按录屏逐帧逆向工程。收录 Legion VPN（白金/深蓝双主题罗马战士）、Velorah、Sky Estate、Avant Studio、Art Landing 五页，四页带 AI 生成循环运镜视频背景，移动端已适配。",
-    cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/kimimotion/cover.jpg",
-    intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/kimimotion/",
-    china: "https://kimimotion.ok.kimi.link"
+    cover: "covers/kimimotion.png",
+    intl: "https://kimimotion.ok.kimi.link/",
+    label: "打开网站",
+    platform: "KIMI",
+    china: ""
+  },
+  {
+    title: "栖居 Habitat · 松间一隅",
+    sub:   "Habitat — Interactive 3D Home Explorer",
+    promptLabel: "原始制作需求",
+    prompt: "2.创建一个网页，中间展示一套高精度、充满细节的家居建筑 3D 模型（但没有天花板），包含客厅、厨房、餐厅、卧室、卫生间和阳台等多个房间，各个房间、家具都可以单独探索并附带讲解，支持切换三种模型：真实材质、白模效果与线框模式，支持隐藏/显示家具、切换昼夜模式，夜晚模式下模型中自动开启室内灯光，并且每个房间都可以单独进入和浏览，并且支持一键切换至平面图（默认线框模式）",
+    desc:  "一套没有天花板的温暖自然住宅：自由旋转探索客厅、厨房、餐厅、卧室、卫生间与阳台，点选 32 组家具阅读设计细节。支持真实材质、白模与线框，昼夜灯光、家具显隐、房间漫游及一键平面图。",
+    cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/habitat/cover.png",
+    intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/habitat/",
+    china: ""
+  },
+  {
+    title: "SELENE · 月面漫游",
+    sub: "SELENE — Lunar Surface Explorer",
+    promptLabel: "原始制作需求",
+    prompt: "1. 创建一个网页，中间是一辆高精度、充满细节、极度写实的月面探测车 3D 模型，并且探测车在同样精细真实的月球表面上缓慢行驶，背景为太空，环境并不是二维静态的，可以通过鼠标进行缩放、旋转和自由浏览。",
+    desc: "六轮探测车在三维月面缓慢行驶，留下连续车辙。自由观察车轮、悬挂与仪器，探索陨石坑、岩石和星空；支持环绕、车载及自由漫游视角。",
+    cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/selene/cover.png",
+    intl: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/selene/",
+    china: ""
+  },
+  {
+    title: "四季小屋",
+    sub: "Moonlit Forge — One Cottage, Six Moments",
+    promptLabel: "从零制作 · 逆向整理版",
+    prompt: "请从零制作一个名为「MOONLIT FORGE」的可交互 3D 微缩小屋网页。它应像一本可以触摸的童话绘本：同一座温暖的小屋，在夜晚、白天与四季之间流转。请直接交付能运行的完整网站、三维模型和可编辑源码。\n\n一、整体视觉\n采用精致的低多边形微缩模型风格，几何轮廓清楚，边缘轻微倒角，材质哑光，灯光柔和。画面安静、有大量留白；避免写实摄影、复杂后台面板和满屏装饰。模型必须为可以从不同角度观察的真实三维几何。\n\n二、小屋建模\n在 Blender 中建模并导出 GLB，同时保存 .blend；使用 Three.js 加载与渲染。以一块约 5.7×5.4 单位的厚实方形草地底座承托场景，底座有深绿色侧壁、倒角和柔和投影。\n中央是一座童话风石砌小屋：灰紫墙体、陡峭且檐角微翘的双坡屋顶、错缝排列的紫红色实体瓦片、浅灰石质屋脊和檐边。墙角露出交错石块，墙面有少量修补石。正面是琥珀色拱形木门，带纵向木板、黑色铰链、门把手和浅色拱门框；门上方有发出暖光的窄拱窗。\n左侧连接小型锻炉及高烟囱，炉口是拱形，内部可见橙暖火光；烟囱分段砌砖，顶部有缓缓漂浮的低多边形烟团。右侧是一片延伸屋檐，由细木柱支撑；屋檐下放木墩和深色铁砧，旁边堆放切口可见的木柴。门口有暖光壁灯、石阶和不规则踏步石。周围点缀岩石、小花、草丛和一棵圆润块状树冠的小树。\n把树叶、草地、发光窗、炉火、烟团和积雪分别组织成可识别的对象或材质，方便实时控制。允许合并同材质的静态细节，但保留季节变化所需部件。\n\n三、六个场景\n用底部六个标签切换 Night、Day、Spring、Summer、Autumn、Winter；默认 Night。同一模型在切换时保持当前观察角度，不重新加载。\nNight：深蓝灰背景 #191b27，奶油色正文、浅黄绿强调色，冷色环境光映衬橙色炉火、门灯与窗光。\nDay：浅灰鼠尾草绿背景 #c4caba，深绿色文字，柔和日光照亮草地与墙体，减弱炉火与窗光。\nSpring：薄荷绿背景 #a1c5b0，树冠偏粉，草地鲜绿，少量浅粉花瓣缓慢飘落。\nSummer：深青绿背景 #216060，奶油色文字，树叶浓绿、日光温暖；桌面布局将模型移到左侧，文案移到右侧。\nAutumn：灰玫瑰背景 #6c5358，暖米色文字，树叶金褐色，草地泛黄，少量金色落叶飘落，增强炉火暖意。\nWinter：蓝灰背景 #42596d，浅灰白文字，屋顶及地面可见真正的积雪几何，雪花缓缓落下，窗与炉火更暖。\n背景、文字颜色、材质颜色和灯光在约 0.8–1.3 秒内柔和过渡。烟团轻微浮动，炉火亮度小幅呼吸；特效克制，不遮挡建筑，也不让炉口成为过曝白斑。\n\n四、页面布局与文案\n桌面为铺满视口的单页，顶部左侧两行小字标志「MOONLIT / FORGE」，中间小字「ONE COTTAGE. SIX MOMENTS.」及当前章节，右侧 Pause / Play 按钮。\n主区域一般左文右图，文案约占 42%，模型约占 58%；模型视角为略俯视的三分之四视角，完整显示底座、房顶和烟囱。标题使用大号优雅衬线体，第二行斜体并使用场景强调色；小字用简洁无衬线体。\n六场景标题依次为：\nNight：Moon above. / Fire within.\nDay：Morning light. / A slower start.\nSpring：Soft petals. / Fresh starts.\nSummer：Long days. / Slow living.\nAutumn：Golden leaves. / Warmer hearts.\nWinter：Quiet snow. / Warm windows.\n每个标题下写两句简短英文氛围文案与一个进入下一场景的文字箭头按钮。右侧边缘放六个细长进度标记；底部中间是带小图标的胶囊形六场景切换器，左下「A LIVING MINIATURE」，右下「EST. 2026」。模型下方提示「DRAG TO EXPLORE」并提供重置视角按钮。\n\n五、交互\n鼠标或触摸拖动旋转小屋，带轻微阻尼并限制上下翻转。静置时缓慢自动旋转。点击场景标签、右侧进度标记、下一场景按钮，或滚动鼠标滚轮，都能切换场景；滚轮需节流，避免一次滚动跳过多章。\nPause 冻结自动旋转、烟雾、飘落粒子及炉火波动，但用户仍可拖动和切换场景；Play 恢复动画。Reset 恢复初始三分之四视角。快速连续切换时只显示当前文案，不能叠字、跳高或错位。\n\n六、移动端与工程\n手机改为上文下图，模型保持足够大，六个标签完整可点，底部控件不覆盖主要内容；390×844 视口没有横向溢出。所有按钮支持键盘焦点、可读标签；尊重减少动态效果设置。\n模型、纹理和代码使用可部署的相对资源路径，提供加载状态、加载失败提示与 WebGL 不支持提示。优先合并几何和复用材质，限制像素比与粒子数量。使用物理材质、柔和阴影、环境补光和适当色调映射呈现微缩模型质感。\n\n七、交付与验收\n交付可运行网站、GLB、Blender 源文件和启动说明。实际检查六场景、拖动旋转、暂停/继续、重置、滚动切换、快速连点与手机布局；确认模型及资源加载成功、控制台无运行错误。不要以一张渲染图、静态模型截图或空页面代替交互成品。",
+    promptSource: "https://weibo.com/6182606334/5339877644437211",
+    promptNote: "根据已完成的小屋模型、六场景与交互逆向整理，可脱离参考视频直接使用；不是归藏原始提示词，也未验证单次输入即可复现相同成品。",
+    desc: "可旋转的三维微缩小屋，在夜晚、白天、春、夏、秋、冬六种状态间切换。观察炉火、窗光、花叶和积雪，暂停动画或拖动探索细节。",
+    cover: "covers/moonlit-forge.png",
+    intl: "https://xiaoxi-moonlit-forge.sun-xiaoxi.chatgpt.site/",
+    label: "打开网站",
+    china: ""
   },
   {
     title: "Astra 作品 × Opus 临摹",
     sub:   "GPT-6 Astra 发布周作品集 · 左右对照",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "从 X 与社区整理里选出 GPT-6 Astra 发布周的 6 件作品，用 Claude Opus 5 各自重写一遍做成对照站：1400 米程序化下潜的深海、按运动学解算的 V8 四冲程剖面、带昼夜时间轴的微缩首尔、旋涡天穹下可步行的梵高小镇、双环能量核心产品页，以及会自己弹巴洛克织体的 WebAudio 键盘。每张卡片左边是原作出处与作者，右边可内嵌预览；总览页附逐项对照表与自评还原度，并注明这是按描述重写而非 1:1 复刻。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/v8-engine.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/",
@@ -154,6 +184,7 @@ const EXHIBITIONS = [
   {
     title: "深渊：活着的深海",
     sub:   "Opus 临摹 · 原作 ABYSSAL: The Living Deep（@emollick）",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "按种子生成的一片海：从阳光珊瑚礁一路下潜到 1400 米的深渊热液区，五个深度分区各有自己的雾色与光强。成片的珊瑚、随洋流摆动的海藻、绕圈巡游的鱼群与扇动胸鳍的蝠鲼、脉动的热液喷口，换一个种子整片海重新长一遍。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/abyssal.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/works/abyssal/",
@@ -163,6 +194,7 @@ const EXHIBITIONS = [
   {
     title: "V8 四冲程剖面",
     sub:   "Opus 临摹 · 原作 Interactive V8 Engine（@DilumSanjaya）",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "按真实运动学跑的 V8：十字平面曲轴、90° 夹角两列缸，活塞位移由曲柄连杆公式解算，点火顺序 1-8-4-3-6-5-7-2。气门升程、缸压条、火花塞点火与剖切缸体都能实时看，点任意一缸锁定观察它此刻在走哪个冲程。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/v8-engine.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/works/v8-engine/",
@@ -172,6 +204,7 @@ const EXHIBITIONS = [
   {
     title: "首尔立体地图",
     sub:   "Opus 临摹 · 原作 Seoul 3D Atlas（@synabreu）",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "微缩首尔：汉江横穿城市、三座桥、六个城区上千栋程序化楼房，窗格是运行时用 Canvas 画出来的贴图。N 首尔塔、乐天世界塔、景福宫、东大门 DDP、63 大厦五处地标可点击飞越，一条时间轴把正午推到凌晨两点。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/seoul-atlas.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/works/seoul-atlas/",
@@ -181,6 +214,7 @@ const EXHIBITIONS = [
   {
     title: "可以走进去的梵高小镇",
     sub:   "Opus 临摹 · 原作 Walk Through Van Gogh（@petergostev）",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "第一人称走进四幅画：天穹用两次域扭曲的噪声卷成《星月夜》的旋涡笔触，地面铺一万八千根实例化笔触草与麦浪。黄房子、夜间露天咖啡座、奥维尔教堂、罗纳河的星夜，走近任意一处会淡入那幅画的名字。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/van-gogh-town.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/works/van-gogh-town/",
@@ -190,6 +224,7 @@ const EXHIBITIONS = [
   {
     title: "轨道核心",
     sub:   "Opus 临摹 · 原作 Orbital Core Showcase（@oneruofeng）",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "纯程序化几何的能量核心产品页：菲涅尔辉光壳、抖动的等离子丝、两组反向自转的环与十二枚约束模块，悬停弹出规格，爆炸视图把整机拆开。能量与转速滑杆同时驱动亮度、灯光、粒子与左栏参数。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/orbital-core.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/works/orbital-core/",
@@ -199,6 +234,7 @@ const EXHIBITIONS = [
   {
     title: "勃兰登堡键盘",
     sub:   "Opus 临摹 · 原作 Brandenburg Piano（@DeryaTR_）",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "会自己弹巴赫式织体的 3D 键盘：WebAudio 合成的羽管键琴音色，按 BWV 1048 第一乐章的写法生成 G 大调乐句——右手连绵十六分音符压在行走低音上。音符条从上方落到琴键触发按键与光晕，也可以自己上手弹。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/brandenburg-piano.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/works/brandenburg-piano/",
@@ -208,6 +244,7 @@ const EXHIBITIONS = [
   {
     title: "Astra 案例集",
     sub:   "128 件发布周作品索引 · 每条带复刻 prompt",
+    promptLabel: "Opus 临摹生成 Prompt",
     desc:  "GPT-6 Astra 发布周公开作品的索引：游戏 48、网页应用 51、Blender/3D 23、视频 4、绘画 2，其中 52 件有可直接打开的 live demo。可按分类筛选与关键词搜索，每张卡片挂一条按描述反推的复刻 prompt，已临摹的 6 件一键跳到本站版本。",
     cover: "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/assets/covers/cases.jpg",
     intl:  "https://sunxiaoxi2039-star.github.io/website-showcase-sites/ideas/astra-vs-opus/cases/",
@@ -222,66 +259,55 @@ document.getElementById("year").textContent = new Date().getFullYear();
 document.getElementById("count").textContent =
   String(EXHIBITIONS.length).padStart(2, "0") + " 个展览";
 
-EXHIBITIONS.forEach((ex, i) => {
-  const a = document.createElement("a");
-  a.className = "exhibit";
-  a.href = ex.intl || "#";
-  a.target = "_blank";
-  a.rel = "noreferrer";
-  a.innerHTML = `
+const localPreview = ["127.0.0.1", "localhost"].includes(location.hostname);
+const resolveEntry = url => localPreview && url?.startsWith("https://sunxiaoxi2039-star.github.io/website-showcase-sites/")
+  ? url.replace("https://sunxiaoxi2039-star.github.io/website-showcase-sites/", "../website-showcase-sites/") : url;
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+EXHIBITIONS.forEach((entry, i) => {
+  const ex = {...entry, intl: resolveEntry(entry.intl), cover: resolveEntry(entry.cover)};
+  const article = document.createElement("article");
+  article.className = "exhibit";
+  article.innerHTML = `
     <span class="num">${String(i + 1).padStart(2, "0")}</span>
     <div class="ex-body">
-      <div class="cover">${ex.cover ? `<img src="${ex.cover}" alt="${ex.title}"
-        onerror="this.remove()">` : ""}</div>
+      <a class="cover" href="${ex.intl}" target="_blank" rel="noreferrer" aria-label="打开${ex.title}">${ex.cover ? `<img src="${ex.cover}" alt="${ex.title}" onerror="this.remove()">` : ""}</a>
       <div>
-        <h2 class="ex-title serif">${ex.title}</h2>
+        ${ex.prompt ? '<span class="case-badge">成功案例 · 附制作 Prompt</span>' : ''}
+        <h2 class="ex-title serif"><a href="${ex.intl}" target="_blank" rel="noreferrer">${ex.title}</a></h2>
         <div class="ex-sub">${ex.sub}</div>
         <p class="ex-desc">${ex.desc}</p>
+        ${ex.prompt ? `<details class="prompt-box" open>
+          <summary>Prompt · ${ex.promptLabel}</summary>
+          <div class="prompt-content">
+            <pre class="prompt-text">${escapeHtml(ex.prompt)}</pre>
+            <p class="prompt-note">${ex.promptNote || '保留发起制作时的原始需求；成品经过后续实现、调试与浏览器验证。'}</p>
+            <div class="prompt-actions"><button class="copy-prompt" type="button" aria-label="复制${ex.title}的 Prompt">复制 Prompt</button>${ex.promptSource ? `<a class="prompt-source" href="${ex.promptSource}" target="_blank" rel="noreferrer">参考来源 ↗</a>` : ''}<span class="copy-status" role="status" aria-live="polite"></span></div>
+          </div>
+        </details>` : ''}
       </div>
     </div>
     <div class="links">
-      ${ex.intl ? `<span class="gate"><span class="tag">国际</span>GitHub Pages ↗</span>` : ""}
-      ${ex.china
-        ? `<span class="gate" data-china="${ex.china}"><span class="tag">中国</span>Kimi ↗</span>`
-        : `<span class="gate off"><span class="tag">中国</span>待发布</span>`}
+      ${ex.intl ? `<a class="gate" href="${ex.intl}" target="_blank" rel="noreferrer"><span class="tag">${ex.label ? (ex.platform || "SITES") : (localPreview && ex.intl.startsWith("../") ? "本地" : "国际")}</span>${ex.label || (localPreview && ex.intl.startsWith("../") ? "打开作品" : "GitHub Pages")} ↗</a>` : ""}
+      ${ex.china ? `<a class="gate" href="${ex.china}" target="_blank" rel="noreferrer"><span class="tag">中国</span>Kimi ↗</a>` : (ex.platform === "KIMI" ? "" : `<span class="gate off"><span class="tag">中国</span>待发布</span>`)}
     </div>`;
-  // 中国入口单独跳转，避免触发整卡的国际链接
-  const chinaGate = a.querySelector("[data-china]");
-  if (chinaGate) chinaGate.addEventListener("click", (e) => {
-    e.preventDefault(); e.stopPropagation();
-    window.open(chinaGate.dataset.china, "_blank", "noreferrer");
+  const copyButton = article.querySelector('.copy-prompt');
+  if (copyButton) copyButton.addEventListener('click', async () => {
+    const status = article.querySelector('.copy-status');
+    try {
+      await navigator.clipboard.writeText(ex.prompt);
+      status.textContent = '已复制完整 Prompt';
+      copyButton.textContent = '已复制 ✓';
+      setTimeout(() => { copyButton.textContent = '复制 Prompt'; status.textContent = ''; }, 2500);
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(article.querySelector('.prompt-text'));
+      const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+      status.textContent = '已选中全文，请按 Ctrl+C / ⌘C 复制';
+    }
   });
-
-  // 一件作品 = 卡片 + （可选）生成它用的 prompt
-  const row = document.createElement("div");
-  row.className = "exhibit-row";
-  row.appendChild(a);
-
-  if (ex.prompt) {
-    const pw = document.createElement("div");
-    pw.className = "pwrap";
-    pw.innerHTML = `
-      <details>
-        <summary>生成这件作品用的 prompt</summary>
-        <div class="pbody">
-          <button class="copy" type="button">复制</button>
-          <pre></pre>
-        </div>
-      </details>`;
-    pw.querySelector("pre").textContent = ex.prompt;
-    pw.querySelector(".copy").addEventListener("click", (e) => {
-      e.preventDefault();
-      const btn = e.currentTarget;
-      navigator.clipboard?.writeText(ex.prompt).then(() => {
-        btn.textContent = "已复制";
-        setTimeout(() => { btn.textContent = "复制"; }, 1600);
-      }).catch(() => { btn.textContent = "复制失败"; });
-    });
-    row.appendChild(pw);
-  }
-
-  list.appendChild(row);
+  list.appendChild(article);
 });
+
 </script>
 </body>
 </html>
